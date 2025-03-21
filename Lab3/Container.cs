@@ -37,14 +37,10 @@ public abstract class Container
 
         CargoWeight += load;
     }
-    
-    public virtual void PrintInfo()
+
+    public override string ToString()
     {
-        Console.WriteLine($"Container ID: {Id}");
-        Console.WriteLine($"Cargo Weight: {CargoWeight} kg");
-        Console.WriteLine($"Container Weight: {ContainerWeight} kg");
-        Console.WriteLine($"Height: {Height} cm");
-        Console.WriteLine($"Depth: {Depth} cm");
-        Console.WriteLine($"Max Load: {MaxLoad} kg");
+        return
+            $"Container {Id} (cargoWeight={CargoWeight} kg, containerWeight={ContainerWeight} kg, height={Height} cm, depth={Depth} cm, maxLoad={MaxLoad} kg, ";
     }
 }

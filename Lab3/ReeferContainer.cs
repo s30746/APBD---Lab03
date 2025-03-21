@@ -23,14 +23,17 @@ public class ReeferContainer : Container
     public ReeferContainer(double cargoWeight, double height, double containerWeight, double depth,
         double maxLoad, string product) : base(cargoWeight, height, containerWeight, depth, "C", maxLoad)
     {
-        ProductType = product;
-        Temperature = Products[product];
+        if (!Products.ContainsKey(product.ToLower()))
+        {
+            throw new ArgumentException($"Invalid product type: {product}");
+        }
+
+        ProductType = product.ToLower();
+        Temperature = Products[product.ToLower()];
     }
-    
-    public override void PrintInfo()
+
+    public override string ToString()
     {
-        base.PrintInfo();
-        Console.WriteLine($"Temperature: {Temperature}");
-        Console.WriteLine($"Product Type: {ProductType}");
+        return base.ToString() + $"temperature={Temperature} \u00b0C, productType={ProductType})";
     }
 }

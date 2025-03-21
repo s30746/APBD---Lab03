@@ -12,25 +12,24 @@ public class LiquidContainer : Container, IHazardNotifier
     }
 
 
-    public void Notify(string id, string msg)
+    public void Notify(string msg)
     {
-        Console.WriteLine($"HAZARD ALERT: {id} - {msg}");
+        Console.WriteLine($"HAZARD ALERT {Id}: {msg}");
     }
 
     public override void Load(double load)
     {
         if (load + CargoWeight > (IsHazardous ? MaxLoad * 0.5 : MaxLoad * 0.9))
         {
-            Notify(Id, "Load is too heavy.");
+            Notify("Load is too heavy.");
             throw new OverfillException("Cargo Weight + New Load is too heavy.");
         }
 
         CargoWeight += load;
     }
 
-    public override void PrintInfo()
+    public override string ToString()
     {
-        base.PrintInfo();
-        Console.WriteLine($"Hazardous: {IsHazardous}");
+        return base.ToString() + $"isHazardous={IsHazardous})";
     }
 }

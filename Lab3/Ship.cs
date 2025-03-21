@@ -7,31 +7,31 @@ public class Ship
     public double MaxSpeed { get; set; }
     public double MaxCargoWeight { get; set; }
 
+    public int Id { get; set; }
+
+    private static int IdCounter = 1;
+
     public Ship(int maxCapacity, double maxSpeed, double maxCargoWeight)
     {
         Containers = new List<Container>(MaxCapacity);
         MaxCapacity = maxCapacity;
         MaxSpeed = maxSpeed;
         MaxCargoWeight = maxCargoWeight;
+        Id = IdCounter++;
     }
 
     public void AddContainer(Container newContainer)
     {
-        double weightCheck = 0;
+        double totalWeight = Containers.Sum(c => c.ContainerWeight + c.CargoWeight); 
 
-        foreach (var c in Containers)
+        if (totalWeight + newContainer.ContainerWeight + newContainer.CargoWeight > MaxCargoWeight * 1000)
         {
-            weightCheck += c.ContainerWeight;
+            throw new OverfillException("Max cargo weight exceeded");
         }
 
-        if (weightCheck + newContainer.ContainerWeight > MaxCargoWeight)
+        if (Containers.Count >= MaxCapacity) 
         {
-            throw new OverfillException("Max cargo weight exceed");
-        }
-
-        if (Containers.Count + 1 >= MaxCapacity)
-        {
-            throw new OverfillException("Max cargo capacity exceed");
+            throw new OverfillException("Max cargo capacity exceeded");
         }
 
         Containers.Add(newContainer);
@@ -39,19 +39,10 @@ public class Ship
 
     public void AddContainers(List<Container> newContainers)
     {
-        double weightCheck = 0;
+        double totalWeight = Containers.Sum(c => c.ContainerWeight + c.CargoWeight);
+        double newContainersWeight = newContainers.Sum(c => c.ContainerWeight + c.CargoWeight);
 
-        foreach (var c in Containers)
-        {
-            weightCheck += c.ContainerWeight;
-        }
-
-        foreach (var newContainer in newContainers)
-        {
-            weightCheck += newContainer.ContainerWeight;
-        }
-
-        if (weightCheck > MaxCargoWeight)
+        if (totalWeight + newContainersWeight > MaxCargoWeight * 1000)
         {
             throw new OverfillException("Max cargo weight exceeded");
         }
@@ -112,28 +103,22 @@ public class Ship
     }
 
 
-    public void PrintInfo()
+    public override string ToString()
     {
-        Console.WriteLine($"Ship Information:");
-        Console.WriteLine($"Max Capacity: {MaxCapacity} containers");
-        Console.WriteLine($"Max Speed: {MaxSpeed} knots");
-        Console.WriteLine($"Max Cargo Weight: {MaxCargoWeight} kg");
-        Console.WriteLine($"Current Number of Containers: {Containers.Count}");
-        Console.WriteLine();
+        return $"Ship {Id} (speed={MaxSpeed} knots, maxContainerNum={MaxCapacity}, maxWeight={MaxCargoWeight} t)";
+    }
 
+    public void PrintContainers()
+    {
+        Console.WriteLine(
+            $"Ship {Id} (speed={MaxSpeed} knots, maxContainerNum={MaxCapacity}, maxWeight={MaxCargoWeight} t)");
+        Console.WriteLine("-----------------------");
         Console.WriteLine("Containers on the Ship:");
         Console.WriteLine("-----------------------");
-        if (Containers.Count == 0)
+
+        foreach (var c in Containers)
         {
-            Console.WriteLine("No containers on board.");
-        }
-        else
-        {
-            foreach (var container in Containers)
-            {
-                container.PrintInfo();
-                Console.WriteLine("-----------------------");
-            }
+            Console.WriteLine(c);
         }
     }
 }

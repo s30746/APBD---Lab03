@@ -9,21 +9,19 @@ public class GasContainer : Container, IHazardNotifier
     {
         Pressure = pressure;
     }
-    
-    public void Notify(string id, string msg)
+
+    public void Notify(string msg)
     {
-        Console.WriteLine($"HAZARD ALERT: {id} - {msg}");
+        Console.WriteLine($"HAZARD ALERT {Id}: {msg}");
     }
 
     public override void Unload()
     {
         CargoWeight = 0.05 * CargoWeight;
     }
-    
-    public override void PrintInfo()
+
+    public override string ToString()
     {
-        base.PrintInfo();
-        Console.WriteLine($"Pressure: {Pressure} K");
+        return base.ToString() + $"pressure={Pressure} atm)";
     }
-    
 }
